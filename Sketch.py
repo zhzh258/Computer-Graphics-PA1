@@ -316,7 +316,7 @@ class Sketch(CanvasBase):
                     else:
                         D = D + 2*abs(dy) - 2*abs(dx)
                         y += 1 if (dy > 0) else -1
-            
+                return
             # case 2    1 < m < +inf ------ y based
             if m == "inf" or m > 1:
                 if p1.coords[1] > p2.coords[1]: # make sure that p1.y <= p2.y
@@ -344,6 +344,8 @@ class Sketch(CanvasBase):
                     else:
                         D = D + 2*abs(dx) - 2*abs(dy)
                         x += 1 if (dx > 0) else -1
+                return
+            return
 
         ### TODO 4 (extra credit: anti aliased rendering of line) ###
         
@@ -351,7 +353,7 @@ class Sketch(CanvasBase):
         # We keep track of num_of_points, num_of_point belongs to {1,2,3,4}. It decides the brightness of each pixel
         # (x, y) is the current Point in [0, 4(x2 - x1)] * [0, 4(y2 - y1)]
         # Whenever x % 4 becomes 0 || y % 4 becomes 0, we know that we enter a new pixel in [x1, x2] * [y1, y2] 
-        if doAA == True:
+        elif doAA == True:
             m = abs(p1.coords[1] - p2.coords[1]) / abs(p1.coords[0] - p2.coords[0]) if p1.coords[0] != p2.coords[0] else "inf"
             if m != "inf" and m <= 1: # x based
                 p1, p2 = sorted([p1, p2], key=lambda p: p.coords[0])
@@ -398,7 +400,6 @@ class Sketch(CanvasBase):
                 x = 0
                 y = 0
                 while y <= 4*(y2 - y1):
-                    self.drawPoint(buff, Point((x,y), ColorType(0,1,0), None))
                     num_of_points += 1
                     print(f"y1={y1}, y2={y2} x={x}, y={y}, x_prev={x_prev}, y_prev={y_prev}")
                     if( x % 4 == 0 and x != x_prev) or (y % 4 == 0 and y != y_prev):
@@ -412,11 +413,10 @@ class Sketch(CanvasBase):
                         x_prev = x
                         D = D + 2*abs(dx)
                     else:
-                        D = D + 2*abs(dx) - 2*abs(dx)
+                        D = D + 2*abs(dx) - 2*abs(dy)
                         x_prev = x
                         x += 1 if (dx > 0) else -1
                 return
-
         return
 
     def drawTriangle(self, buff: Buff, p1: Point, p2: Point, p3: Point, doSmooth=True, doAA=False, doAAlevel=4, doTexture=False):
